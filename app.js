@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('BOOM! GAME OVER!')
         isGameOver = true
 
-        // show location of ALL the bombs
+        // show location of all the bombs
         squares.forEach(square => {
             if (square.classList.contains('bomb')) {
                 square.innerHTML = '💣'
