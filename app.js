@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const grid = document.querySelector('.grid')
     let width = 10
     let bombAmount = 20
+    let flags = 0
     let squares = []
     let isGameOver = false
 
@@ -30,6 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
             square.addEventListener('click', function(e) {
                 click(square)
             })
+
+            // ctrl and left click
+            square.oncontextmenu = function(e) {
+                e.preventDefault()
+                addFlag(square)
+            }
         }
 
         // add numbers to the squares
@@ -56,6 +63,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     createBoard()
 
+    // Add flag with right click
+    function addFlag(square) {
+        if (isGameOver) return
+        if (!square.classList.contains('checked') && (flags < bombAmount)) {
+            if (!square.classList.contains('flag')) {
+                square.classList.add('flag')
+                square.innerHTML = '🚩'
+                flags ++
+            } else {
+                square.classList.remove('flag')
+                square.innerHTML = ''
+                flags --
+            }
+        }
+    }
+
     // click on square actions
     function click(square) {
         let currentId = square.id
@@ -64,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (square.classList.contains('checked') || square.classList.contains('flag')) return
         // squares with bombs
         if (square.classList.contains('bomb')) {
-            console.log('Game Over');
+            gameOver(square)
         } else {
             // normal squares close to bombs
             let total = square.getAttribute('data')
@@ -132,5 +155,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 10)
 
     }
+
+    // Game Over 
+    function gameOver(square) {
+        console.log('BOOM! GAME OVER!')
+        isGameOver = true
+
+        // show location of ALL the bombs
+        squares.forEach(square => {
+            if (square.classList.contains('bomb')) {
+                square.innerHTML = '💣'
+            }
+        })
+    }
+
+
 
 })
